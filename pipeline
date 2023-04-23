@@ -1,0 +1,14 @@
+
+digraph pipeline {
+    # Define the nodes in the pipeline
+    node [shape=rectangle]
+    data [label="Input Data"]
+    clean [label="Data Cleaning"]
+    feat [label="Feature Engineering"]
+    model [label="Model Training"]
+    eval [label="Model Evaluation"]
+    deploy [label="Model Deployment"]
+
+    # Define the connections between nodes
+    data -> clean -> feat -> model -> eval -> deploy
+}
