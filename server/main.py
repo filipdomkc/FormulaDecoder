@@ -5,14 +5,28 @@ from typing import Union, List
 import utility
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 @app.get("/")
 def home():
     return {"Hello": "world"}
 
-@app.post("/uploadfile/")
+@app.post("/uploadfile")
 async def upload_image_file(image: UploadFile = File(...)):
     # Load image using OpenCV
     img_bytes = await image.read()
