@@ -55,18 +55,16 @@ function DropIn(props) {
 
 
   return (
-    <section className='max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center'>
-        <div {...getRootProps({ className: 'max-w-[800px] mt-[-96px] w-full h-[200px] mx-auto text-center flex flex-col justify-center' })}>
-            <input {...getInputProps()} />
-            <div className=" hover:cursor-pointer max-w-[800px] text-white border-2 border-solid border-[#00df9a] rounded-lg p-10">
-                <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" style={{color: "#00df9a",}} />
-                <p >Drag'n Drop your equation image here</p>
-                <em>(Only JPG and PNG files are supported)</em>
-            </div>
-        </div>
-        {!response ? (
-          <p style={{ color: "red" }}>{errorMessage}</p>
-        ) : (<Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-md font-medium mx-auto text-black'>
+    <section className='max-w-[800px] w-full h-screen mx-auto text-center flex flex-col justify-center items-center' id='DropIn'>
+      <div {...getRootProps({ className: 'max-w-[800px] w-full h-[200px] mx-auto text-center flex flex-col justify-center' })}>
+          <input {...getInputProps()} />
+          <div className=" hover:cursor-pointer max-w-[800px] text-white border-2 border-solid border-[#00df9a] rounded-lg p-10">
+              <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" style={{color: "#00df9a",}} />
+              <p >Drag'n Drop your equation image here</p>
+              <em>(Only JPG and PNG files are supported)</em>
+          </div>
+      </div>
+      <Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-md font-medium mx-auto text-black'>
         <CardActionArea>
           <CardMedia
             component="img"
@@ -80,6 +78,24 @@ function DropIn(props) {
             </Typography>
           </CardContent>
         </CardActionArea>
+      </Card>
+
+      {!response ? (
+        <p style={{ color: "red" }}>{errorMessage}</p>
+      ) : (<Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-md font-medium mx-auto text-black'>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="140"
+          image= {image}
+          alt="equationimg"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="body4" component="div" >
+            Result: {response}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
       </Card>)}
     </section>
   );
