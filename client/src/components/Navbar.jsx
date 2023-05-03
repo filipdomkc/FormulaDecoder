@@ -17,7 +17,7 @@ const Navbar = () => {
             <li className='p-4 hover:cursor-pointer'><Link to="Home" spy={true} smooth={true} offset={50} duration={500}>Home</Link></li>
             <li className='p-4 hover:cursor-pointer'><Link  to="DropIn" spy={true} smooth={true} offset={50} duration={500}>Solve</Link></li>
             <li className='p-4 hover:cursor-pointer'><Link  to="About" spy={true} smooth={true} offset={50} duration={500}>About</Link></li>
-            <li className='p-4 hover:cursor-pointer'><Link to="Footer" spy={true} smooth={true} offset={50} duration={500}>Contact</Link></li>
+            <li className='p-4 hover:cursor-pointer'><Link to="Contact" spy={true} smooth={true} offset={50} duration={500}>Contact</Link></li>
         </ul>
         <div onClick={handleNav} className='block md:hidden'>
             {!nav ? <AiOutlineClose size={20}/> : <AiOutlineMenu size={20}/>} 
@@ -28,7 +28,7 @@ const Navbar = () => {
                 <li className='p-4 border-b border-gray-600 hover:cursor-pointer'><Link to="Home" spy={true} smooth={true} offset={50} duration={500}>Home</Link></li>
                 <li className='p-4 border-b border-gray-600 hover:cursor-pointer'><Link  to="DropIn" spy={true} smooth={true} offset={50} duration={500}>Solve</Link></li>
                 <li className='p-4 border-b border-gray-600 hover:cursor-pointer'><Link  to="About" spy={true} smooth={true} offset={50} duration={500}>About</Link></li>
-                <li className='p-4 hover:cursor-pointer'><Link to="Footer" spy={true} smooth={true} offset={50} duration={500}>Contact</Link></li>
+                <li className='p-4 hover:cursor-pointer'><Link to="Contact" spy={true} smooth={true} offset={50} duration={500}>Contact</Link></li>
             </ul>
         </div>
     </div> 

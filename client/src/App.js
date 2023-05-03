@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import DropIn from "./components/DropIn";
 import About from "./components/About";
 import Footer from "./components/Footer";
+import Contact from "./components/Contact";
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Hero/>
       <About/>
       <DropIn/>
+      <Contact className='flex justify-center'/>
       <Footer/>
     </div>
   );
