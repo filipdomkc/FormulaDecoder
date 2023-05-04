@@ -42,13 +42,6 @@ function DropIn(props) {
     };
   }
 
-  const displayImage = image ? (
-    <div>
-      <h3 className='text-white'>Dropped image:</h3>
-      <img src={image} alt="Dropped image" />
-    </div>
-  ) : null;
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: "image/png",
