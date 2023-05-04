@@ -4,6 +4,7 @@ import {useDropzone} from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import Card from '@mui/material/Card';
+import { Grow } from '@material-ui/core';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
@@ -64,7 +65,11 @@ function DropIn(props) {
               <em>(Only JPG and PNG files are supported)</em>
           </div>
       </div>
-      <Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-md font-medium mx-auto text-black'>
+
+      {!response ? (
+        <p style={{ color: "red" }}>{errorMessage}</p>
+      ) : (<Grow in={!!image} key={image}> 
+        <Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-md font-medium mx-auto text-black'>
         <CardActionArea>
           <CardMedia
             component="img"
@@ -78,25 +83,8 @@ function DropIn(props) {
             </Typography>
           </CardContent>
         </CardActionArea>
-      </Card>
-
-      {!response ? (
-        <p style={{ color: "red" }}>{errorMessage}</p>
-      ) : (<Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-md font-medium mx-auto text-black'>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image= {image}
-          alt="equationimg"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="body4" component="div" >
-            Result: {response}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      </Card>)}
+        </Card> 
+        </Grow>)}
     </section>
   );
 }
