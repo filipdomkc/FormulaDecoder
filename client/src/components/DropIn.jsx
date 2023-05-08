@@ -62,7 +62,7 @@ function DropIn(props) {
       {!response ? (
         <p style={{ color: "red" }}>{errorMessage}</p>
       ) : (<Grow in={!!image} key={image}> 
-        <Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-md font-medium mx-auto text-black'>
+        <Card sx={{ maxWidth: 200 }} style={{ backgroundColor: '#00df9a' }} className='border-2 border-solid border-black  w-[200px] rounded-25px font-medium mx-auto text-black shadow-md'>
         <CardActionArea>
           <CardMedia
             component="img"
