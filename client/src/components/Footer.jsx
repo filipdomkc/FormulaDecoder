@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  FaFacebookSquare,
+  FaLinkedin,
   FaGithubSquare,
   FaInstagram,
   FaTwitterSquare,
@@ -13,10 +13,16 @@ const Footer = () => {
         <h1 className='w-full text3xl font-bold text-[#00df9a]'>FORMULA<strong>DECODER</strong>.</h1>
         <p className='py-4'>Say goodbye to frustrating calculations and hello to effortless learning</p>
         <div className='flex justify-between md:w-[75%] my-6'>
-            <FaFacebookSquare size={30} />
-            <FaInstagram size={30} />
-            <FaTwitterSquare size={30} />
-            <FaGithubSquare size={30} />
+            <a href='https://www.linkedin.com/in/filip-domovi%C4%87-b89588152/'>
+              <FaLinkedin size={30} />
+            </a>
+            <a href='https://www.instagram.com/filip.dom/'>
+              <FaInstagram size={30} />
+              </a>
+            <FaTwitterSquare size={30} /> 
+            <a href='https://github.com/filipdomkc'>
+              <FaGithubSquare size={30} />
+            </a>
         </div>
       </div>
       <div className='lg:col-span-2 flex justify-between mt-6'>
@@ -47,7 +53,7 @@ const Footer = () => {
     </div>
       </div>
       <div class="border-t border-gray-300 py-4">
-        <p class="text-sm text-gray-600">&copy; 2023 FORMULADECODER. All rights reserved.</p>
+        <p class="text-sm text-gray-600">&copy; 2023 FORMULADECODER. by FD. All rights reserved.</p>
       </div>
     </div>
   );

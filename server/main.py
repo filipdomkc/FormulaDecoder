@@ -1,8 +1,7 @@
 import cv2
 import numpy as np
 import uvicorn
-from typing import Union, List
-import utility
+from utilityoop import ImageProcessor, EquationParser, Solver
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,14 +27,21 @@ def home():
 
 @app.post("/uploadfile")
 async def upload_image_file(image: UploadFile = File(...)):
-    # Load image using OpenCV
-    img_bytes = await image.read()
-    np_img  = np.frombuffer(img_bytes, np.uint8)
-    img = cv2.imdecode(np_img , cv2.IMREAD_COLOR)
+    contents = await image.read()
+    nparr = np.fromstring(contents, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    img_processor = ImageProcessor(img)
+    processed_img = img_processor.processed_img
     
-    result = utility.process_n_calc(img)
+    ep = EquationParser(processed_img)
+    equation = ep.parse_equation()
+    
+    solver = Solver(equation)
+    solver.solve()
+    
+    solution = solver.solutions
 
-    return JSONResponse(content={"result": str(result)})
+    return JSONResponse(content={"result": solution})
 
 if __name__=="__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

@@ -1,6 +1,7 @@
 import React,{useRef} from 'react';
 import emailjs from '@emailjs/browser';
 import styled from "styled-components";
+import EmailIllustration from '../assets/email-illustration.png'
 
 const Contact = () => {
     const form = useRef();
@@ -18,8 +19,9 @@ const Contact = () => {
     };
 
     return (
-        <div className='w-full h-screen flex justify-center items-center' id="Contact"> 
-            <StyledContactForm>
+        <div className='w-full h-screen justify-center items-center grid md:grid-cols-2' id="Contact"> 
+            <img src={EmailIllustration} alt='/' className='max-w-[300] mx-auto h-auto'/>
+            <StyledContactForm className='mx-auto'>
                 <form ref={form} onSubmit={sendEmail}>
                     <label>Name</label>
                     <input type="text" name="user_name" placeholder='Name'/>

@@ -10,11 +10,11 @@ import Contact from "./components/Contact";
 function App() {
   return (
     <div className="App">
-      <Navbar className="z-50"/>
+      <Navbar className="z-1000"/>
       <Hero/>
       <About/>
-      <DropIn/>
-      <Contact className='flex justify-center'/>
+      <DropIn className="z-30"/>
+      <Contact className='flex justify-center z-40'/>
       <Footer/>
     </div>
   );

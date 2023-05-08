@@ -1,26 +1,14 @@
 # import useful libraries
 import re
 import cv2
-import pytesseract
 import sympy
+import pytesseract
 
 class ImageProcessor:
     
-    def __init__(self, img_path):
-        self.img_path = img_path
-        self.img = self.load_image()
-
-    def load_image(self):
-        """
-        Load an image from the specified path.
-
-        Returns:
-            img (numpy.ndarray): A BGR image.
-        """
-        img = cv2.imread(self.img_path)
-        if img is None:
-            print("Failed to load image.")
-        return img
+    def __init__(self, img):
+        self.img = img
+        self._processed_img = self.preprocess_image()
 
     def preprocess_image(self):
         """
@@ -46,15 +34,20 @@ class ImageProcessor:
 
         return inverted_img
     
+    @property
+    def processed_img(self):
+        return self._processed_img
+    
 class EquationParser:
     
-    def __init__(self):
+    def __init__(self,inverted_img):
+        self.img = inverted_img
         self.x_threshold = 5
         self.custom_config_1 = r'-c tessedit_char_whitelist=+-*/=()0123456789xyzO --psm 8 --oem 3'
         self.is_exponent=None
         self.equation = ""
     
-    def parse_equation(self, inverted_img):
+    def parse_equation(self):
         """
         Given an inverted grayscale image, identify the bounding boxes around individual characters 
         and return the list of bounding rectangles along with the location of any exponent character(s).
@@ -68,7 +61,7 @@ class EquationParser:
         """
 
         # Find contours in the thresholded image
-        contours, hierarchy = cv2.findContours(inverted_img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
+        contours, hierarchy = cv2.findContours(self.img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
 
         # Extract bounding rectangles for each contour and sort them by x-coordinate
         boundingRects = [cv2.boundingRect(contour) for contour in contours]
@@ -118,12 +111,14 @@ class EquationParser:
             x, y, w, h = boundingBox
 
             # Extract text from the region of interest using pytesseract
-            roi = inverted_img[y-10:y+h+10, x-10:x+w+10]
+            roi = self.img[y-10:y+h+10, x-10:x+w+10]
             text = pytesseract.image_to_string(roi, config=self.custom_config_1 )
             text = text.rstrip('\n')
-            equation_parse.append((text, is_exponent))
-
-        return equation_parse
+            equation_parse.append((text, is_exponent))  
+        
+        equation = self.rewritting_equation(equation_parse)
+        
+        return equation 
     
     def _correct_bounding_boxes(self, bounding_boxes):
         """
@@ -181,6 +176,7 @@ class EquationParser:
         Returns
             string (str): returns the rewritten equation as a string.
         """
+        
         # Iterate through the list of tuples
         for i in range(len(tuple_list)):
             if i==0:
@@ -197,13 +193,22 @@ class EquationParser:
 
         return self.equation
     
+
 class Solver:
     
     def __init__(self, eq):
-        self.eq = eq
-        self.variables = set(re.findall(r'\b[a-zA-Z]+\b', eq))
-        self.symbols = self.create_symbols()
+        """
+        Initializes the Solver class instance with an equation.
         
+        Args:
+            eq (str): A string representing an equation.
+        """
+        self._eq = eq
+        self.variables = set(re.findall(r'\b[a-zA-Z]+\b', self._eq))
+        self.symbols = self.create_symbols()
+        self._solutions = []
+     
+    @property
     def is_polynomial(self):
         """
         Determines if the input is a polynomial equation or not.
@@ -213,7 +218,7 @@ class Solver:
             boolean: True if the input is a polynomial equation, False otherwise
         """
         # Loop through each element in the equation
-        for el in self.eq:
+        for el in self._eq:
             # Skip operands and other non-variable/non-numeric characters
             if el[0] in '+-*/^()=':
                 continue
@@ -226,6 +231,12 @@ class Solver:
         return False
     
     def create_symbols(self):
+        """
+        Creates symbols for each variable in the equation.
+        
+        Returns:
+            dict: A dictionary mapping variable names to SymPy symbols.
+        """
         symbols = {}
         
         # create the symbols for the variables
@@ -233,10 +244,65 @@ class Solver:
             symbols[var] = sympy.symbols(var)
         return symbols
     
-    def sympy_symbol(self):
-        equation = self.eq
+    def sympy_equation(self):
+        """
+        Replaces variables in the equation with their corresponding symbols.
         
+        Returns:
+            str: A string representing the equation with variables replaced with SymPy symbols.
+        """
         # replace the variables in the equation with the symbols
         for var, symbol in self.symbols.items():
-            equation = equation.replace(var, str(symbol))
-        return equation
+            self._eq = self._eq.replace(var, str(symbol))
+            self._eq  = sympy.sympify(self._eq)
+        return self._eq
+    
+    def solve(self):
+        """
+        Solves the input equation for its variable(s).
+        
+        Returns:
+            list: A list of solutions for the equation.
+        """
+        if '=' in self._eq:
+            # Strip off '= 0' from the equation
+            self._eq = self._eq.split('=')[0].strip()
+
+        if self.is_polynomial:
+            for var, symbol in self.symbols.items():
+                solution = sympy.solve(self.sympy_equation(),symbol)
+                self._solutions.append(solution)
+            return self._solutions
+        
+        else: 
+            self._solutions.append(eval(self._eq)) 
+            return self._solutions
+            
+    @property
+    def solutions(self):
+        """
+        Returns the solutions to the equation as a string.
+        
+        Returns:
+            str: A string representing the solution(s) to the equation.
+        """
+        if isinstance(self._solutions[0], int):
+            return (self._solutions[0])
+        else:
+            solution_str = ""
+            for i, solution in enumerate(self._solutions[0]):
+                if len(self._solutions[0]) > 1:
+                    solution_str += "x{} = {}".format(i+1, solution)
+                    if i < len(self._solutions[0]) - 1:
+                        solution_str += ", "
+            return (solution_str)
+    
+    @property 
+    def equation(self):
+        """
+        Returns the input equation as a string.
+        
+        Returns:
+            str: A string representing the input equation.
+        """
+        return self._eq

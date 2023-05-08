@@ -20,7 +20,6 @@ function DropIn(props) {
     // Ensure that dropped file is in PNG format
     if (acceptedFiles.length > 0 ) {
       const imageUrl = URL.createObjectURL(acceptedFiles[0]);
-      setImage(imageUrl);
 
       // Prepare data for POST request
       const formData = new FormData();
@@ -33,6 +32,7 @@ function DropIn(props) {
         console.log("File uploaded successfully!", response);
         setResponse(response.data.result); // Set the response data on the frontend
         setErrorMessage(null);
+        setImage(imageUrl);
 
       } catch (error) {
         console.error("Error uploading file!", error);
