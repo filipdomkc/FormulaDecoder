@@ -3,13 +3,14 @@ import emailjs from '@emailjs/browser';
 import styled from "styled-components";
 import EmailIllustration from '../assets/email-illustration.png'
 
+
 const Contact = () => {
     const form = useRef();
 
     const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_5shn44c', 'template_59275d5', form.current, 'uwcZy1Y533MyE9n5_')
+    emailjs.sendForm(process.env.REACT_APP_SERVICE_ID, process.env.REACT_APP_TEMPLATE_ID, form.current, process.env.REACT_APP_EMAILJS_PUBLIC_KEY)
         .then((result) => {
             console.log(result.text);
             e.target.reset();
