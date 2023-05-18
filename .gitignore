@@ -1,6 +1,2 @@
-# Exclude  files
-utility.py
-Dockerfile
-.ipynb_checkpoints
 ubuntu_tesseract_dockerfile.txt
 working_app_dockerfile.txt

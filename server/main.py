@@ -11,6 +11,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "http://frontend:80",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -28,7 +29,7 @@ def home():
 @app.post("/uploadfile")
 async def upload_image_file(image: UploadFile = File(...)):
     contents = await image.read()
-    nparr = np.fromstring(contents, np.uint8)
+    nparr = np.frombuffer(contents, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     img_processor = ImageProcessor(img)
     processed_img = img_processor.processed_img
@@ -44,4 +45,4 @@ async def upload_image_file(image: UploadFile = File(...)):
     return JSONResponse(content={"result": solution})
 
 if __name__=="__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

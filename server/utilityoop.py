@@ -251,10 +251,15 @@ class Solver:
         Returns:
             str: A string representing the equation with variables replaced with SymPy symbols.
         """
+        # create a copy of the equation to avoid modifying the original
+        equation_copy = self._eq
+
         # replace the variables in the equation with the symbols
         for var, symbol in self.symbols.items():
-            self._eq = self._eq.replace(var, str(symbol))
-            self._eq  = sympy.sympify(self._eq)
+            equation_copy = equation_copy.replace(var, str(symbol))
+
+        # convert the modified equation string to a SymPy expression
+        self._eq = sympy.sympify(equation_copy)
         return self._eq
     
     def solve(self):
