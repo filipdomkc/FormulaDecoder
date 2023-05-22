@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <Navbar className="z-1000"/>
       <Hero/>
-      <About/>
+      <About />
       <DropIn className="z-30"/>
       <Contact className='flex justify-center z-40'/>
       <Footer/>

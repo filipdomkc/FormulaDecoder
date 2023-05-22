@@ -1,7 +1,9 @@
 import React,{useRef} from 'react';
 import emailjs from '@emailjs/browser';
 import styled from "styled-components";
-import EmailIllustration from '../assets/email-illustration.png'
+import EmailIllustration from '../assets/dA65VDhvzg.json'
+import '../styles/svgStyles.css'; // Import the CSS file
+import Lottie from 'lottie-react'
 
 
 const Contact = () => {
@@ -21,7 +23,6 @@ const Contact = () => {
 
     return (
         <div className='w-full h-screen justify-center items-center grid md:grid-cols-2' id="Contact"> 
-            <img src={EmailIllustration} alt='/' className='max-w-[300] mx-auto h-auto'/>
             <StyledContactForm className='mx-auto'>
                 <form ref={form} onSubmit={sendEmail}>
                     <label>Name</label>
@@ -35,6 +36,7 @@ const Contact = () => {
                     <input type="submit" value="Send" />
                 </form>
             </StyledContactForm>
+            <Lottie animationData={EmailIllustration} style={{ height: '512px', width: '512px' }}/>
         </div>
   )
 }
