@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import axios from 'axios';
 import {useDropzone} from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,6 +10,7 @@ import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
+
 function DropIn(props) {
 
   const [response, setResponse] = useState(null);
@@ -17,6 +18,8 @@ function DropIn(props) {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onDrop = async (acceptedFiles) => {
+
+
     // Ensure that dropped file is in PNG format
     if (acceptedFiles.length > 0 ) {
       const imageUrl = URL.createObjectURL(acceptedFiles[0]);
@@ -34,6 +37,7 @@ function DropIn(props) {
         setErrorMessage(null);
         setImage(imageUrl);
 
+
       } catch (error) {
         console.error("Error uploading file!", error);
         setResponse(null); // Clear the response data on the frontend
@@ -41,6 +45,7 @@ function DropIn(props) {
       }
     };
   }
+
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -50,14 +55,16 @@ function DropIn(props) {
 
   return (
     <section className='max-w-[800px] w-full h-screen mx-auto text-center flex flex-col justify-center items-center' id='DropIn'>
-      <div {...getRootProps({ className: 'max-w-[800px] w-full h-[200px] mx-auto text-center flex flex-col justify-center' })}>
+      <div {...getRootProps({ className: 'max-w-[800px] w-full h-[200px] mx-auto text-center flex flex-col justify-center parent relative' })}>
           <input {...getInputProps()} />
-          <div className=" hover:cursor-pointer max-w-[800px] text-white border-2 border-solid border-[#00df9a] rounded-lg p-10">
+          <div className="child absolute hover:cursor-pointer w-full text-white border-2 border-solid border-[#00df9a] rounded-lg p-10 z-10">
               <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" style={{color: "#00df9a",}} />
               <p >Drag'n Drop your equation image here</p>
               <em>(Only JPG and PNG files are supported)</em>
           </div>
       </div>
+      
+      
 
       {!response ? (
         <p style={{ color: "red" }}>{errorMessage}</p>
