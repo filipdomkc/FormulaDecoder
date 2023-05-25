@@ -12,7 +12,10 @@ origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://frontend:80",
-]
+    "http://formuladecoder-client-1:80",
+    "http://54.243.23.19:80",
+    "http://54.243.23.19:8080"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

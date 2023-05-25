@@ -3,14 +3,16 @@ import re
 import cv2
 import sympy
 import pytesseract
+import numpy as np
+from typing import List, Tuple, Dict
 
 class ImageProcessor:
     
-    def __init__(self, img):
+    def __init__(self, img) -> None:
         self.img = img
         self._processed_img = self.preprocess_image()
 
-    def preprocess_image(self):
+    def preprocess_image(self) -> np.ndarray:
         """
         Preprocess the image by converting to grayscale, applying binary thresholding,
         and inverting the image.
@@ -40,14 +42,14 @@ class ImageProcessor:
     
 class EquationParser:
     
-    def __init__(self,inverted_img):
+    def __init__(self,inverted_img: np.ndarray) -> None:
         self.img = inverted_img
         self.x_threshold = 5
         self.custom_config_1 = r'-c tessedit_char_whitelist=+-*/=()0123456789xyzO --psm 8 --oem 3'
         self.is_exponent=None
         self.equation = ""
     
-    def parse_equation(self):
+    def parse_equation(self) -> List[Tuple[List[str], List[bool]]]:
         """
         Given an inverted grayscale image, identify the bounding boxes around individual characters 
         and return the list of bounding rectangles along with the location of any exponent character(s).
@@ -59,7 +61,6 @@ class EquationParser:
             eq_rep (list): A list of tuples where the first tuple elements contains characters in left-to-right order, and second
             tuple elements are boolean telling whether or not that particular character is exponent 
         """
-
         # Find contours in the thresholded image
         contours, hierarchy = cv2.findContours(self.img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
 
@@ -120,12 +121,20 @@ class EquationParser:
         
         return equation 
     
-    def _correct_bounding_boxes(self, bounding_boxes):
+    def _correct_bounding_boxes(self, bounding_boxes: List[Tuple[int, int, int, int]]) -> List[Tuple[int, int, int, int]]:
         """
         This function takes a list of bounding boxes and corrects the height of any
         bounding boxes where the width is much greater than the height, so that they
         become more square-like. The modification is done based on the center point
         of each bounding box.
+
+        Args:
+            bounding_boxes (List[Tuple[int, int, int, int]]): A list of bounding boxes represented
+            as tuples (x, y, width, height).
+
+        Returns:
+            corrected_boxes (List[Tuple[int, int, int, int]]): A list of corrected bounding boxes represented
+            as tuples (x, y, width, height).
         """
         corrected_boxes = []
     
@@ -141,15 +150,16 @@ class EquationParser:
             corrected_boxes.append((x, y, w, h)) 
         return corrected_boxes
     
-    def _check_exponent(self, bounding_boxes):
+    def _check_exponent(self, bounding_boxes: List[Tuple[int, int, int]]) -> List[bool]:
         """
-        Checks difference between vertical coordinate y among two bounding boxes.
-        
+        Checks the difference between the vertical coordinate 'y' among two bounding boxes.
+
         Args:
-            bounding_boxes (list): bounding box to be used for comparison
+            bounding_boxes (List[Tuple[int, int, int]]): Bounding boxes to be used for comparison.
+
         Returns:
-            boolean: True if according to a condition exponent is recognized. Otherwise returns False.
-            
+            mask (List[bool]): A list of boolean values. True if, according to a condition, an exponent is recognized.
+            Otherwise, False.
         """
         origin = (bounding_boxes[0][1])-10
         baseline = bounding_boxes[0][1]+bounding_boxes[0][3]+10
@@ -167,16 +177,18 @@ class EquationParser:
             
         return mask
     
-    def rewritting_equation(self,tuple_list):
+    def rewritting_equation(self, tuple_list: List[Tuple[str, bool]]) -> str:
         """
         Takes a list of tuples representing a mathematical equation and rewrites it as a string with exponentiation
-        represented by double asterisks (i.e. **). Inserts * between adjacent number and variable.
+        represented by double asterisks (i.e., **). Inserts * between adjacent numbers and variables.
+
         Args:
-            tuple_list(lst): A list of tuples representing a mathematical equation. Each tuple contains an element of the equation as a string and a boolean value indicating whether the element is an exponent or not.
-        Returns
-            string (str): returns the rewritten equation as a string.
+            tuple_list (List[Tuple[str, bool]]): A list of tuples representing a mathematical equation. Each tuple contains
+            an element of the equation as a string and a boolean value indicating whether the element is an exponent or not.
+
+        Returns:
+            equation (str): The rewritten equation as a string.
         """
-        
         # Iterate through the list of tuples
         for i in range(len(tuple_list)):
             if i==0:
@@ -196,7 +208,7 @@ class EquationParser:
 
 class Solver:
     
-    def __init__(self, eq):
+    def __init__(self, eq: str) -> None:
         """
         Initializes the Solver class instance with an equation.
         
@@ -209,7 +221,7 @@ class Solver:
         self._solutions = []
      
     @property
-    def is_polynomial(self):
+    def is_polynomial(self) -> bool:
         """
         Determines if the input is a polynomial equation or not.
         Args:
@@ -230,12 +242,12 @@ class Solver:
         # If none of the above conditions are met, then the equation is not a polynomial
         return False
     
-    def create_symbols(self):
+    def create_symbols(self) -> Dict[str, sympy.Symbol]:
         """
         Creates symbols for each variable in the equation.
-        
+
         Returns:
-            dict: A dictionary mapping variable names to SymPy symbols.
+            symbols (Dict[str, sympy.Symbol]): A dictionary mapping variable names to SymPy symbols.
         """
         symbols = {}
         
@@ -244,12 +256,12 @@ class Solver:
             symbols[var] = sympy.symbols(var)
         return symbols
     
-    def sympy_equation(self):
+    def sympy_equation(self) -> str:
         """
         Replaces variables in the equation with their corresponding symbols.
-        
+
         Returns:
-            str: A string representing the equation with variables replaced with SymPy symbols.
+            equation (str): A string representing the equation with variables replaced with SymPy symbols.
         """
         # create a copy of the equation to avoid modifying the original
         equation_copy = self._eq
@@ -262,12 +274,12 @@ class Solver:
         self._eq = sympy.sympify(equation_copy)
         return self._eq
     
-    def solve(self):
+    def solve(self) -> List:
         """
         Solves the input equation for its variable(s).
-        
+
         Returns:
-            list: A list of solutions for the equation.
+            solutions (List): A list of solutions for the equation.
         """
         if '=' in self._eq:
             # Strip off '= 0' from the equation
@@ -284,12 +296,12 @@ class Solver:
             return self._solutions
             
     @property
-    def solutions(self):
+    def solutions(self) -> str:
         """
         Returns the solutions to the equation as a string.
-        
+
         Returns:
-            str: A string representing the solution(s) to the equation.
+            solution_str (str): A string representing the solution(s) to the equation.
         """
         if isinstance(self._solutions[0], int):
             return (self._solutions[0])
@@ -303,11 +315,11 @@ class Solver:
             return (solution_str)
     
     @property 
-    def equation(self):
+    def equation(self) -> str:
         """
         Returns the input equation as a string.
-        
+
         Returns:
-            str: A string representing the input equation.
+            equation (str): A string representing the input equation.
         """
         return self._eq
