@@ -28,6 +28,8 @@ This project aims to develop a Photomath-like application to enhance full-stack 
 
 Feel free to explore the project and contribute to its development. For more details and instructions on how to run the application, please refer to the project documentation.
 
+**You can visit web site at : http://formuladecoder.tech**
+
 ## How this app works
 **Example of using app via web UI**
 
