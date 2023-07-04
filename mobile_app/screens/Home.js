@@ -13,12 +13,9 @@ import { TouchableOpacity, StyleSheet, Text, Image, View, Button, PanResponder, 
 
 const ScreenWidth = Dimensions.get('screen').width;
 const ScreenHeight = Dimensions.get('screen').height;
-const x = ScreenWidth / 2
-const y = ScreenHeight / 2
 const MinSize = 50;
 const MaxSize = Math.min(ScreenWidth, ScreenHeight) - 50;
 const API_URL='http://formuladecoder.tech:8000/uploadfile'
-
 
 function Home() {
 
@@ -28,7 +25,6 @@ function Home() {
   const [maskHeight, setMaskHeight] = useState(null);
   const [maskOriginX, setMaskOriginX] = useState (null);
   const [maskOriginY, setMaskOriginY] = useState (null);
-
   const [permission, setPermission] = useState(null);
   const [flashOn, setFlashOn] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,7 +42,6 @@ function Home() {
   const [response, setResponse] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [solution,setSolution] = useState (null)
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -76,7 +71,6 @@ function Home() {
       setPermission({ granted: status === 'granted' });
     })();
   }, []);
-
 
   const requestPermission = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
@@ -121,7 +115,6 @@ function Home() {
   const handleCapture = async () => {
     handleButtonPress();
     
-  
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       capturedPhotoRef.current = photo;
@@ -141,10 +134,6 @@ function Home() {
       };
 
       if (manipulatedImage){
-        console.log(manipulatedImage)
-        // Use the API_URL variable
-        console.log(API_URL);
-
         const formData = new FormData();
         formData.append('image', {
           uri: manipulatedImage.uri,
@@ -154,25 +143,20 @@ function Home() {
         
         try {
           const response = await axios.post(API_URL , formData);
-
-          console.log('File uploaded successfully!', response);
           setResponse(response)
           setResultModalVisible(true);
           setSolution(response.data.result)
 
         } catch (error) {
-          console.error('Error uploading file!', error);
           setErrorMessage('Could not read the image. Please try again!');
           setErrorModalVisible(true)
         }
       }
 
     } catch (error) {
-      console.log(error);
       alert('An error occurred while manipulating or saving the image.');
     }
   };
-  
   
   const onAnimationFinish = () => {
     setLoading(false);
@@ -190,9 +174,7 @@ function Home() {
       quality: 1,
     });
 
-    setPickedImage(result.uri)
-
-    console.log(result);
+    setPickedImage(result.uri);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -211,16 +193,12 @@ function Home() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Image upload response:', response.data);
       setResponse(response);
       setResultModalVisible(true);
-      setSolution(response.data.result)
-      console.log(typeof(solution))
-      // Handle the response as needed
+      setSolution(response.data.result);
     } catch (error) {
-      console.error('Image upload error:', error);
       setErrorMessage(error);
-      setErrorModalVisible(true)
+      setErrorModalVisible(true);
  
     }
   };
@@ -230,8 +208,6 @@ function Home() {
     setErrorModalVisible(false);
   };
   
-
-
   return (
       <View style={styles.container} {...panResponder.panHandlers}>
         <Modal
@@ -248,14 +224,15 @@ function Home() {
               </Text>
             </View>
           </View>
-        </Modal>        
+        </Modal>   
         <MaskedView
-          
           style={[styles.maskedView, styles.center]}
           maskElement={
-            <View style={[styles.maskWrapper, styles.center]}>
-              <View ref={maskedViewRef} onLayout={handleLayout} style={[styles.mask, { width, height }]}></View>
-            </View>
+              <View style={[styles.maskWrapper, styles.center]}>
+                <Text style={styles.mathProblemText}>Take a photo of a math problem</Text>
+                <View ref={maskedViewRef} onLayout={handleLayout} style={[styles.mask, { width, height }]}></View>
+              </View>
+
           }
           {...panResponder.panHandlers}
         >
@@ -320,9 +297,6 @@ function Home() {
 );
 }
 
-
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -333,6 +307,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     height: '100%'
+  },
+  wrapper :{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   maskWrapper: {
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -503,17 +483,23 @@ const styles = StyleSheet.create({
   },
   error: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
     color: '#00df9a',
-    marginTop: 40 
+    marginTop: 55 
   },
   errorMsg:{
-    fontSize: 14,
+    fontSize: 12,
     textAlign: 'center',
     color: '#00df9a',
     marginTop: 15
-  }
+  },
+  mathProblemText: {
+    marginBottom: 25,
+    textAlign: 'center',
+    fontSize: 18,
+    color: 'white',
+  },
 });
 
 export default Home;

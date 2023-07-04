@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import { View, Text,StyleSheet, Modal, Dimensions,TouchableOpacity, Linking } from 'react-native';
-import { createDrawerNavigator, } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons'; 
 import Home from './screens/Home';
+import React, {useState, useEffect} from 'react';
+import { AntDesign } from '@expo/vector-icons'; 
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator, } from '@react-navigation/drawer';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { View, Text,StyleSheet, Modal, TouchableOpacity, Linking, LogBox } from 'react-native';
 
 
 const Drawer = createDrawerNavigator();
@@ -73,7 +73,6 @@ const CustomDrawerContent = (props) => {
     setModalVisible(false);
   };
 
-
   return (
     <View style={{flex:1, backgroundColor:'black'}}>
       <DrawerContentScrollView {...props} contentContainerStyle={{backgroundColor:'#black'}} open={false}>
@@ -125,6 +124,8 @@ const CustomDrawerContent = (props) => {
 };
 
 const App = () => {
+  LogBox.ignoreAllLogs();
+  
   return (
       <NavigationContainer>
         <Drawer.Navigator 
@@ -164,8 +165,6 @@ const App = () => {
       </NavigationContainer>
   );
 };
-
-const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
