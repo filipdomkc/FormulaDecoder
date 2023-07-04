@@ -27,3 +27,10 @@ This project aims to develop a Photomath-like application to enhance full-stack 
 - Amazon AWS EC2: Cloud computing service used for deploying the application using Docker containers.
 
 Feel free to explore the project and contribute to its development. For more details and instructions on how to run the application, please refer to the project documentation.
+
+## How this app works
+**Example of using app via web UI**
+![Animation](https://github.com/filipdomkc/FormulaDecoder/assets/68906633/d0ff9016-d4c4-40e1-8ecc-74e35e303e20)
+
+**Example of using app via mobile app**
+(..to be posted)
