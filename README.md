@@ -34,4 +34,7 @@ Feel free to explore the project and contribute to its development. For more det
 ![Animation](https://github.com/filipdomkc/FormulaDecoder/assets/68906633/d0ff9016-d4c4-40e1-8ecc-74e35e303e20)
 
 **Example of using app via mobile app**
-(..to be posted)
+
+<p align="center">
+  <img src="./mobile_app.gif">
+</p>
