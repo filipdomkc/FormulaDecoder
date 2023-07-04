@@ -1,4 +1,5 @@
-# FormulaDecoder
+# $\color[RGB]{0,223,154} FORMULADECODER.$ 
+
 <span style="color: green;">FORMULA**DECODER.**</span> is an AI based application which took inspiration from Photomath app. The goal of this demo project was to build a model that would recognize digits and symbols formulated in a mathematical equation from the picture. Then, the application should be able to solve equation from the picture and give a user the final result.
 
 This project aims to develop a Photomath-like application to enhance full-stack development skills.
