@@ -41,6 +41,7 @@ function Home() {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(true);
   const [resultModalVisible, setResultModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [pickedImage, setPickedImage] = useState(null);
   const [response, setResponse] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -156,11 +157,13 @@ function Home() {
 
           console.log('File uploaded successfully!', response);
           setResponse(response)
+          setResultModalVisible(true);
           setSolution(response.data.result)
 
         } catch (error) {
           console.error('Error uploading file!', error);
           setErrorMessage('Could not read the image. Please try again!');
+          setErrorModalVisible(true)
         }
       }
 
@@ -216,12 +219,15 @@ function Home() {
       // Handle the response as needed
     } catch (error) {
       console.error('Image upload error:', error);
-      // Handle the error as needed
+      setErrorMessage(error);
+      setErrorModalVisible(true)
+ 
     }
   };
 
   const handleCloseModal = () => {
     setResultModalVisible(false);
+    setErrorModalVisible(false);
   };
   
 
@@ -293,6 +299,19 @@ function Home() {
                 <Text style={styles.closeButton}> Close </Text>
               </TouchableOpacity>
               <Text style={styles.solution}>{solution}</Text>
+            </View>
+          </View>
+        </Modal> 
+        }
+        { errorMessage && 
+        <Modal visible={errorModalVisible} animationType="slide" transparent={true}>
+          <View style={styles.resultContainer}>
+            <View style={styles.resultModalContainer}>
+              <TouchableOpacity  onPress={handleCloseModal}>
+                <Text style={styles.closeButton}> Close </Text>
+              </TouchableOpacity>
+              <Text style={styles.error}>Hmmm, that doesnt't look right</Text>
+              <Text style={styles.errorMsg}>Sorry, we can only help with math. Please, retake picture or pick a picture from gallery</Text>
             </View>
           </View>
         </Modal> 
@@ -453,14 +472,22 @@ const styles = StyleSheet.create({
   },
   resultContainer:{
     flex: 1,
+    alignSelf:'center',
     backgroundColor: 'black',
     padding:20,
-    marginTop:70,
+    marginTop:500,
+    marginBottom:100 ,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    width: '80%',
+    paddingHorizontal:20,
+    paddingVertical:30,
   },
   resultModalContainer:{
     flex: 1,
+
   },
   closeButton: {
     position: 'absolute',
@@ -473,6 +500,19 @@ const styles = StyleSheet.create({
     marginTop: 105,
     color:"#00df9a",
     fontSize: 25
+  },
+  error: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#00df9a',
+    marginTop: 40 
+  },
+  errorMsg:{
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#00df9a',
+    marginTop: 15
   }
 });
 
